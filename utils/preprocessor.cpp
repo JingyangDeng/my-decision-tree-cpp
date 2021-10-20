@@ -1,5 +1,6 @@
 #include "preprocessor.h"
 
+#include <iostream>
 #include <unordered_map>
 
 void Preprocessor::factorize(const std::vector<std::vector<std::string>>& data_str, std::vector<std::vector<int>>& data,
