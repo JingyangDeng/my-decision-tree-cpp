@@ -1,8 +1,5 @@
 #include "csv_reader.h"
 
-#include <fstream>
-#include <sstream>
-
 CSVReader::CSVReader(std::string path) {
     this->path = path;
     data.clear();
