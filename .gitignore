@@ -1,6 +1,8 @@
 .ccls-cache/
+.vscode/
 
 *.o
 main
 
 *dataset*
+*.py
