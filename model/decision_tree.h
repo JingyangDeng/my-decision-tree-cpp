@@ -1,6 +1,7 @@
 #ifndef _DECISION_TREE_H
 #define _DECISION_TREE_H
 
+#include <iostream>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -17,10 +18,12 @@ public:
 
 class DecisionTree : public Model {
 protected:
-    TreeNode* root;
-    virtual TreeNode* build_tree(Dataset* train_ds, std::unordered_set<int>& indices,
-                                 std::unordered_set<int>& features) = 0;
-    virtual void prune(Dataset* train_ds) = 0;
+    TreeNode* root = nullptr;
+    virtual TreeNode* build_tree(Dataset* train_ds, const std::unordered_set<int>& indices,
+                                 const std::unordered_set<int>& features,
+                                 std::unordered_map<TreeNode*, std::unordered_set<int>>& data_contained) = 0;
+
+    virtual void prune(Dataset* train_ds, std::unordered_map<TreeNode*, std::unordered_set<int>>& data_contained) = 0;
     int predict(const std::vector<int>& sample);
 
 public:
