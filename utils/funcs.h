@@ -9,7 +9,12 @@
 
 int find(std::unordered_map<int, double>& map, double target);
 
+std::pair<int, int> find(std::unordered_map<int, std::unordered_map<int, double>>& gidx, double gini_min);
+
 void assign(Dataset* train_ds, const std::unordered_set<int>& indices, int f,
+            std::unordered_map<int, std::unordered_set<int>>& new_indices);
+
+void assign(Dataset* train_ds, const std::unordered_set<int>& indices, std::pair<int, int> p,
             std::unordered_map<int, std::unordered_set<int>>& new_indices);
 
 bool label_is_same(Dataset* train_ds, const std::unordered_set<int>& indices);

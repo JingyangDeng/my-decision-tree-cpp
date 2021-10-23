@@ -19,4 +19,11 @@ double info_gain_ratio(Dataset* train_ds, const std::unordered_set<int>& indices
 
 double loss(Dataset* train_ds, const std::unordered_set<int>& indices);
 
+double gini(std::unordered_map<int, int>& pmap, int sum);
+
+double cond_gini(std::unordered_map<int, int>& fmap, std::unordered_map<int, std::unordered_map<int, int>>& cnt,
+                 int sum);
+
+double split_cond_gini(Dataset* train_ds, const std::unordered_set<int>& indices, int feature, int value);
+
 #endif
