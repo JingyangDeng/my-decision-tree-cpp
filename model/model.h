@@ -7,7 +7,7 @@
 
 class Model {
 public:
-    virtual void train(Dataset* train_ds) = 0;
+    virtual void train(Dataset* train_ds, Dataset* val_ds) = 0;
     virtual void test(Dataset* test_ds) = 0;
 };
 

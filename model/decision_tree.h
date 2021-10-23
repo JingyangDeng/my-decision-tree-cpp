@@ -8,6 +8,8 @@
 
 #include "model.h"
 
+#define DEFAULT -1
+
 class TreeNode {
 public:
     int feat;
@@ -23,11 +25,13 @@ protected:
                                  const std::unordered_set<int>& features,
                                  std::unordered_map<TreeNode*, std::unordered_set<int>>& data_contained) = 0;
 
-    virtual void prune(Dataset* train_ds, std::unordered_map<TreeNode*, std::unordered_set<int>>& data_contained) = 0;
+    virtual void prune(Dataset* train_ds, Dataset* val_ds,
+                       std::unordered_map<TreeNode*, std::unordered_set<int>>& data_contained) = 0;
+
     int predict(const std::vector<int>& sample);
 
 public:
-    void train(Dataset* train_ds);
+    void train(Dataset* train_ds, Dataset* val_ds);
     void test(Dataset* test_ds);
 };
 

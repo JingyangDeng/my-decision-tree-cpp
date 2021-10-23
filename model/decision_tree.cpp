@@ -5,7 +5,7 @@ TreeNode::TreeNode() {
     label = -1;
 }
 
-void DecisionTree::train(Dataset* train_ds) {
+void DecisionTree::train(Dataset* train_ds, Dataset* val_ds) {
     std::cout << "training..." << std::endl;
     int N = train_ds->get_data().size();
     int m = train_ds->get_data()[0].size();
@@ -21,16 +21,21 @@ void DecisionTree::train(Dataset* train_ds) {
     }
 
     root = build_tree(train_ds, indices, features, data_contained);
-    prune(train_ds, data_contained);
+    prune(train_ds, val_ds, data_contained);
 }
 
 int DecisionTree::predict(const std::vector<int>& sample) {
     TreeNode* cur = root;
     while (cur->feat >= 0) {
         if (cur->child.find(sample[cur->feat]) == cur->child.end()) {
-            return cur->label;
+            if (cur->child.find(DEFAULT) == cur->child.end()) {
+                return cur->label;
+            } else {
+                cur = cur->child[DEFAULT];
+            }
+        } else {
+            cur = cur->child[sample[cur->feat]];
         }
-        cur = cur->child[sample[cur->feat]];
     }
     return cur->label;
 }
