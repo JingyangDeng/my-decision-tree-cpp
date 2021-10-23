@@ -7,8 +7,13 @@
 
 class DecisionTreeCART : public DecisionTree {
 protected:
-    void dfs(TreeNode* root, Dataset* train_ds, Dataset* val_ds,
-             std::unordered_map<TreeNode*, std::unordered_set<int>>& data_contained);
+    std::vector<double> alpha = {};
+    std::vector<TreeNode*> pruned_node = {};
+    std::vector<int> pruned_feat = {};
+
+    std::pair<int, double> dfs(TreeNode* root, Dataset* train_ds,
+                               std::unordered_map<TreeNode*, std::unordered_set<int>>& data_contained,
+                               std::vector<std::pair<double, TreeNode*>>& g);
 
     TreeNode* build_tree(Dataset* train_ds, const std::unordered_set<int>& indices,
                          const std::unordered_set<int>& features,

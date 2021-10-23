@@ -78,9 +78,57 @@ TreeNode* DecisionTreeCART::build_tree(Dataset* train_ds, const std::unordered_s
 
 void DecisionTreeCART::prune(Dataset* train_ds, Dataset* val_ds,
                              std::unordered_map<TreeNode*, std::unordered_set<int>>& data_contained) {
-    dfs(root, train_ds, val_ds, data_contained);
+    const auto& val_data = val_ds->get_data();
+    const auto& val_label = val_ds->get_label();
+
+    std::vector<double> acc;
+    int val_sz = val_label.size();
+    int cnt = 0;
+    for (int i = 0; i < val_sz; i++) {
+        int c = predict(val_data[i]);
+        cnt += (c == val_label[i]) ? 1 : 0;
+    }
+    acc.emplace_back((double)cnt / val_sz);
+
+    while (root->feat >= 0) {
+        std::vector<std::pair<double, TreeNode*>> g;
+        dfs(root, train_ds, data_contained, g);
+        int k = std::min_element(g.begin(), g.end()) - g.begin();
+        TreeNode* node = g[k].second;
+        alpha.emplace_back(g[k].first);
+        pruned_node.emplace_back(node);
+        pruned_feat.emplace_back(node->feat);
+        node->feat = -1;
+
+        int cnt = 0;
+        for (int i = 0; i < val_sz; i++) {
+            int c = predict(val_data[i]);
+            cnt += (c == val_label[i]) ? 1 : 0;
+        }
+        acc.emplace_back((double)cnt / val_sz);
+    }
+    int k = std::max_element(acc.begin(), acc.end()) - acc.begin();
+    for (int i = k; i < (int)pruned_node.size(); i++) {
+        pruned_node[i]->feat = pruned_feat[i];
+    }
 }
 
-void DecisionTreeCART::dfs(TreeNode* root, Dataset* train_ds, Dataset* val_ds,
-                           std::unordered_map<TreeNode*, std::unordered_set<int>>& data_contained) {
+std::pair<int, double> DecisionTreeCART::dfs(TreeNode* root, Dataset* train_ds,
+                                             std::unordered_map<TreeNode*, std::unordered_set<int>>& data_contained,
+                                             std::vector<std::pair<double, TreeNode*>>& g) {
+    if (root->feat == -1) {
+        return std::make_pair(1, loss_gini(train_ds, data_contained[root]));
+    }
+
+    int num_leaf = 0;
+    double loss_leaf = 0;
+    for (auto& it : root->child) {
+        auto p = dfs(it.second, train_ds, data_contained, g);
+        num_leaf += p.first;
+        loss_leaf += p.second;
+    }
+    double loss = loss_gini(train_ds, data_contained[root]);
+    double gt = (loss - loss_leaf) / (num_leaf - 1);
+    g.emplace_back(std::make_pair(gt, root));
+    return std::make_pair(num_leaf, loss_leaf);
 }
