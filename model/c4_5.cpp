@@ -76,10 +76,10 @@ void DecisionTreeC4_5::dfs(TreeNode* root, Dataset* train_ds, Dataset* val_ds,
     }
 
     if (is_last_parent) {
-        double ca = loss(train_ds, data_contained[root]) + ALPHA;
+        double ca = loss_entropy(train_ds, data_contained[root]) + ALPHA;
         double cb = 0;
         for (auto& it : root->child) {
-            cb += loss(train_ds, data_contained[it.second]) + ALPHA;
+            cb += loss_entropy(train_ds, data_contained[it.second]) + ALPHA;
         }
         if (ca <= cb) {
             root->feat = -1;
