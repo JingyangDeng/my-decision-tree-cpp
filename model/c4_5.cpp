@@ -28,7 +28,7 @@ TreeNode* DecisionTreeC4_5::build_tree(Dataset* train_ds, const std::unordered_s
         gain_max = fmax(gain_max, gain_ratio[f]);
     }
 
-    if (gain_max < EPS) {
+    if (gain_max < EPS_INR) {
         root->label = most_label(train_ds, indices);
         data_contained[root] = indices;
         return root;
@@ -53,18 +53,18 @@ TreeNode* DecisionTreeC4_5::build_tree(Dataset* train_ds, const std::unordered_s
     return root;
 }
 
-void DecisionTreeC4_5::prune(Dataset* train_ds,
+void DecisionTreeC4_5::prune(Dataset* train_ds, Dataset* val_ds,
                              std::unordered_map<TreeNode*, std::unordered_set<int>>& data_contained) {
-    dfs(this->root, train_ds, data_contained);
+    dfs(this->root, train_ds, val_ds, data_contained);
 }
 
-void DecisionTreeC4_5::dfs(TreeNode* root, Dataset* train_ds,
+void DecisionTreeC4_5::dfs(TreeNode* root, Dataset* train_ds, Dataset* val_ds,
                            std::unordered_map<TreeNode*, std::unordered_set<int>>& data_contained) {
     if (root->feat == -1)
         return;
 
     for (auto& it : root->child) {
-        dfs(it.second, train_ds, data_contained);
+        dfs(it.second, train_ds, val_ds, data_contained);
     }
 
     bool is_last_parent = true;
