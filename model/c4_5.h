@@ -2,8 +2,8 @@
 #define _C4_5_H
 
 #include "decision_tree.h"
-#define EPS_INR 0.05
 #define ALPHA 1.
+#define EPS_INR 5e-2
 
 class DecisionTreeC4_5 : public DecisionTree {
 protected:
