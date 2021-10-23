@@ -47,9 +47,9 @@ void DecisionTree::test(Dataset* test_ds) {
     int cnt = 0, N = test_label.size();
     for (int i = 0; i < N; i++) {
         int pred = predict(test_data[i]);
-        std::cout << "pred: " << pred << " truth: " << test_label[i] << std::endl;
+        // std::cout << "pred: " << pred << " truth: " << test_label[i] << std::endl;
         if (pred == test_label[i])
             cnt++;
     }
-    std::cout << "accuracy = " << 1. * cnt / N << std::endl;
+    std::cout << "accuracy = " << 100. * cnt / N << "\%" << std::endl;
 }
