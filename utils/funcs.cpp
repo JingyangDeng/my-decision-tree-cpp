@@ -41,6 +41,19 @@ void assign(Dataset* train_ds, const std::unordered_set<int>& indices, std::pair
     }
 }
 
+void assign(Dataset* train_ds, const std::unordered_set<int>& indices, int f, const std::unordered_set<int>& f_values,
+            std::unordered_map<int, std::unordered_set<int>>& new_indices) {
+    const auto& train_data = train_ds->get_data();
+    for (int i : indices) {
+        int value = train_data[i][f];
+        if (f_values.find(value) != f_values.end()) {
+            new_indices[value].insert(i);
+        } else {
+            new_indices[-1].insert(i);
+        }
+    }
+}
+
 bool label_is_same(Dataset* train_ds, const std::unordered_set<int>& indices) {
     const auto& train_label = train_ds->get_label();
     int label = train_label[*indices.begin()];

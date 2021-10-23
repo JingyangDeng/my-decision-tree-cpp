@@ -23,24 +23,37 @@ double cond_entropy(std::unordered_map<int, int>& fmap, std::unordered_map<int, 
     return hc;
 }
 
-double info_gain_ratio(Dataset* train_ds, const std::unordered_set<int>& indices, int feature) {
+void count(Dataset* train_ds, const std::unordered_set<int>& indices, int f, std::unordered_map<int, std::unordered_map<int, int>>& cnt, std::unordered_map<int, int>& fmap){
     const auto& train_data = train_ds->get_data();
     const auto& train_label = train_ds->get_label();
-    int D = indices.size();
+    for (int i : indices) {
+        int v = train_data[i][f];
+        int l = train_label[i];
+        fmap[v]++;
+        cnt[v][l]++;
+    }
+}
 
+void count(Dataset* train_ds, const std::unordered_set<int>& indices, int f, std::unordered_map<int, std::unordered_map<int, int>>& cnt, std::unordered_map<int, int>& fmap, std::unordered_map<int, int>& lmap){
+    const auto& train_data = train_ds->get_data();
+    const auto& train_label = train_ds->get_label();
+    for (int i : indices) {
+        int v = train_data[i][f];
+        int l = train_label[i];
+        lmap[l]++;
+        fmap[v]++;
+        cnt[v][l]++;
+    }
+}
+
+double info_gain_ratio(Dataset* train_ds, const std::unordered_set<int>& indices, int feature) {
     std::unordered_map<int, std::unordered_map<int, int>> cnt;
     std::unordered_map<int, int> fmap;
     std::unordered_map<int, int> lmap;
-    for (int i : indices) {
-        int f = train_data[i][feature];
-        int l = train_label[i];
-        fmap[f]++;
-        lmap[l]++;
-        cnt[f][l]++;
-    }
-    double h = entropy(lmap, D);
-    double hc = cond_entropy(fmap, cnt, D);
-    double hf = entropy(fmap, D);
+    count(train_ds, indices, feature, cnt, fmap, lmap);
+    double h = entropy(lmap, indices.size());
+    double hc = cond_entropy(fmap, cnt, indices.size());
+    double hf = entropy(fmap, indices.size());
     return (h - hc) / hf;
 }
 
@@ -99,4 +112,20 @@ double loss_gini(Dataset* train_ds, const std::unordered_set<int>& indices) {
         cnt[train_label[i]]++;
     }
     return n * gini(cnt, n);
+}
+
+
+int select_split(Dataset* train_ds, const std::unordered_set<int>& indices, int f, std::unordered_set<int>& selected_values){
+    selected_values.clear();
+    std::unordered_map<int, std::unordered_map<int, int>> cnt;
+    std::unordered_map<int, int> fmap;
+    count(train_ds, indices, f, cnt, fmap); 
+    double wavg_entropy = cond_entropy(fmap, cnt, indices.size());
+    for (auto& it : fmap) {
+        double h = entropy(cnt[it.first], it.second);
+        if(h <= wavg_entropy){
+            selected_values.insert(it.first);
+        }
+    }
+    return fmap.size();
 }

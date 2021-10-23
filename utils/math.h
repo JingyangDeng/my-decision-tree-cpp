@@ -28,4 +28,10 @@ double split_cond_gini(Dataset* train_ds, const std::unordered_set<int>& indices
 
 double loss_gini(Dataset* train_ds, const std::unordered_set<int>& indices);
 
+int select_split(Dataset* train_ds, const std::unordered_set<int>& indices, int f, std::unordered_set<int>& selected_values);
+
+void count(Dataset* train_ds, const std::unordered_set<int>& indices, int f, std::unordered_map<int, std::unordered_map<int, int>>& cnt, std::unordered_map<int, int>& fmap);
+
+void count(Dataset* train_ds, const std::unordered_set<int>& indices, int f, std::unordered_map<int, std::unordered_map<int, int>>& cnt, std::unordered_map<int, int>& fmap, std::unordered_map<int, int>& lmap);
+
 #endif
