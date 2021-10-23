@@ -17,7 +17,7 @@ double cond_entropy(std::unordered_map<int, int>& fmap, std::unordered_map<int, 
 
 double info_gain_ratio(Dataset* train_ds, const std::unordered_set<int>& indices, int feature);
 
-double loss(Dataset* train_ds, const std::unordered_set<int>& indices);
+double loss_entropy(Dataset* train_ds, const std::unordered_set<int>& indices);
 
 double gini(std::unordered_map<int, int>& pmap, int sum);
 
@@ -25,5 +25,7 @@ double cond_gini(std::unordered_map<int, int>& fmap, std::unordered_map<int, std
                  int sum);
 
 double split_cond_gini(Dataset* train_ds, const std::unordered_set<int>& indices, int feature, int value);
+
+double loss_gini(Dataset* train_ds, const std::unordered_set<int>& indices);
 
 #endif

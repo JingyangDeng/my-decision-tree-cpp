@@ -1,7 +1,5 @@
 #include "funcs.h"
 
-#include <iostream>
-
 int find(std::unordered_map<int, double>& map, double target) {
     for (auto& it : map) {
         if (it.second == target) {
@@ -58,9 +56,6 @@ int most_label(Dataset* train_ds, const std::unordered_set<int>& indices) {
     std::unordered_map<int, int> cnt;
     const auto& train_label = train_ds->get_label();
     int max = 0;
-    if (indices.empty()) {
-        std::cout << "sth wrong" << std::endl;
-    }
     for (int i : indices) {
         cnt[train_label[i]]++;
         max = fmax(max, cnt[train_label[i]]);

@@ -44,7 +44,7 @@ double info_gain_ratio(Dataset* train_ds, const std::unordered_set<int>& indices
     return (h - hc) / hf;
 }
 
-double loss(Dataset* train_ds, const std::unordered_set<int>& indices) {
+double loss_entropy(Dataset* train_ds, const std::unordered_set<int>& indices) {
     const auto& train_label = train_ds->get_label();
     int n = indices.size();
     std::unordered_map<int, int> cnt;
@@ -89,4 +89,14 @@ double split_cond_gini(Dataset* train_ds, const std::unordered_set<int>& indices
         }
     }
     return cond_gini(fmap, cnt, D);
+}
+
+double loss_gini(Dataset* train_ds, const std::unordered_set<int>& indices) {
+    const auto& train_label = train_ds->get_label();
+    int n = indices.size();
+    std::unordered_map<int, int> cnt;
+    for (int i : indices) {
+        cnt[train_label[i]]++;
+    }
+    return n * gini(cnt, n);
 }
