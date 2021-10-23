@@ -1,13 +1,18 @@
-#include "utils/loader.h"
 #include "model/c4_5.h"
+#include "model/cart.h"
+#include "utils/loader.h"
 
 int main() {
     std::string path = "./car-dataset/car.data";
     std::vector<double> ratio = {0.6, 0.2, 0.2};
     Loader loader(path, ratio);
-    DecisionTreeC4_5 tree;
 
-    tree.train(loader.train_ds);
-    tree.test(loader.test_ds);
+    DecisionTreeC4_5 tree_c45;
+    tree_c45.train(loader.train_ds, nullptr);
+    tree_c45.test(loader.test_ds);
+
+    DecisionTreeCART tree_cart;
+    tree_cart.train(loader.train_ds, loader.val_ds);
+    tree_cart.test(loader.test_ds);
     return 0;
 }
