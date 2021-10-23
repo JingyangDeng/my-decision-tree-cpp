@@ -1,8 +1,11 @@
 #include "model/c4_5.h"
 #include "model/cart.h"
+#include "model/mytree.h"
 #include "utils/loader.h"
 
 int main() {
+    srand(time(NULL));
+
     std::string path = "./car-dataset/car.data";
     std::vector<double> ratio = {0.6, 0.2, 0.2};
     Loader loader(path, ratio);
@@ -19,5 +22,12 @@ int main() {
     DecisionTreeCART tree_cart;
     tree_cart.train(loader.train_ds, loader.val_ds);
     tree_cart.test(loader.test_ds);
+
+    std::cout << std::endl;
+    std::cout << "-------------- MyTree --------------" << std::endl;
+
+    MyDecisionTree mytree;
+    mytree.train(loader.train_ds, loader.val_ds);
+    mytree.test(loader.test_ds);
     return 0;
 }
