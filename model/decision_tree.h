@@ -12,12 +12,13 @@
 
 class TreeNode {
 public:
-    int feat;
-    int label;
-    std::unordered_map<int, TreeNode*> child;
+    int feat;                                 // the id of feature that current node considers
+    int label;                                // the label of instances belonging to current node
+    std::unordered_map<int, TreeNode*> child; // map: the value of feat -> next node, set DEFAULT = -1 as default value. 
     TreeNode();
 };
 
+// DecisionTree is an abstract class. Its pure virtual methods, build_tree & prune, should be implemented by its subclass. 
 class DecisionTree : public Model {
 protected:
     TreeNode* root = nullptr;

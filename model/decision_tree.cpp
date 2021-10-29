@@ -5,6 +5,7 @@ TreeNode::TreeNode() {
     label = -1;
 }
 
+// the training process contains two stage: building tree and pruning.
 void DecisionTree::train(Dataset* train_ds, Dataset* val_ds) {
     std::cout << "training..." << std::endl;
     int N = train_ds->get_data().size();
@@ -24,11 +25,15 @@ void DecisionTree::train(Dataset* train_ds, Dataset* val_ds) {
     prune(train_ds, val_ds, data_contained);
 }
 
+// predict the label of a single sample.
 int DecisionTree::predict(const std::vector<int>& sample) {
     TreeNode* cur = root;
     while (cur->feat >= 0) {
+        //check if value of considered feature is in child.
         if (cur->child.find(sample[cur->feat]) == cur->child.end()) {
+            // if not, try default value -1.
             if (cur->child.find(DEFAULT) == cur->child.end()) {
+                // if key -1 does not exist neither, return the most common label.
                 return cur->label;
             } else {
                 cur = cur->child[DEFAULT];
@@ -40,6 +45,7 @@ int DecisionTree::predict(const std::vector<int>& sample) {
     return cur->label;
 }
 
+// traverse all testing samples and compare their predicted label & ground truth.
 void DecisionTree::test(Dataset* test_ds) {
     std::cout << "testing..." << std::endl;
     const auto& test_data = test_ds->get_data();
