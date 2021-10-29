@@ -31,6 +31,19 @@ void Loader::load_data(const std::string& path, Dataset* ds) {
     }
 }
 
+void Loader::save_data(const std::string& path, Dataset* ds){
+    std::ofstream f(path);
+    if(f.is_open()) {
+        for(int i = 0; i < (int)ds->data.size(); i++){
+            for(int j = 0; j < (int)ds->data[0].size(); j++){
+                f << ds->data[i][j] << ' ';
+            }
+            f << ds->label[i] << std::endl;
+        }
+        f.close();
+    }
+}
+
 void Loader::load(const std::vector<double>& ratio) {
     if (is_file_exists(path + ".train") && is_file_exists(path + ".val") && is_file_exists(path + ".test")) {
         load_data(path + ".train", train_ds);
@@ -43,6 +56,9 @@ void Loader::load(const std::vector<double>& ratio) {
     Preprocessor::factorize(reader.get_data(), data, dict);
     Preprocessor::train_test_split(data, ratio, train_ds->data, train_ds->label, val_ds->data, val_ds->label,
                                    test_ds->data, test_ds->label);
+    save_data(path + ".train", train_ds);
+    save_data(path + ".val", val_ds);
+    save_data(path + ".test", test_ds);
 }
 
 const std::vector<std::vector<std::string>>& Loader::get_dict() {

@@ -12,6 +12,7 @@ private:
     std::string path;
     void load(const std::vector<double>& ratio);
     void load_data(const std::string& path, Dataset* ds);
+    void save_data(const std::string& path, Dataset* ds);
     std::vector<std::vector<std::string>> dict;
 
 public:
