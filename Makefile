@@ -1,6 +1,6 @@
 ELF=main
 CC=g++ -std=c++17 -Wall -g
-SRC=$(shell find -name '*.cpp' | grep -v .ccls-cache | grep -v hw)
+SRC=$(shell find -name '*.cpp' | grep -v .ccls-cache)
 OBJ=$(SRC:.cpp=.o)
 $(ELF):$(OBJ)
 $(OBJ):
